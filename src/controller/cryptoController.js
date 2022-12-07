@@ -13,6 +13,7 @@ try{
     let result=await axios(currency)
     let data=result.data.data.sort((a, b) =>b.changePercent24Hr - a.changePercent24Hr)
     let arr=[]
+    await cryptoModel.deleteMany({})
     for(let i=0;i<data.length;i++){
         let unique=await cryptoModel.find({symbol:data[i].symbol,name:data[i].name})
         if(unique.length==0){
