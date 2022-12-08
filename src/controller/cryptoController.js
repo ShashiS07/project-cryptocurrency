@@ -15,15 +15,15 @@ try{
     let arr=[]
     await cryptoModel.deleteMany({})
     for(let i=0;i<data.length;i++){
-        let unique=await cryptoModel.find({symbol:data[i].symbol,name:data[i].name})
-        if(unique.length==0){
+        // let unique=await cryptoModel.find({symbol:data[i].symbol,name:data[i].name})
+        // if(unique.length==0){
             let collection={}
             collection.symbol=data[i].symbol,
             collection.name=data[i].name,
             collection.marketCapUsd=data[i].marketCapUsd,
             collection.priceUsd=data[i].priceUsd
             arr.push(collection)
-        }
+        // }
     }
     await cryptoModel.insertMany(arr)
 
