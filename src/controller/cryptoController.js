@@ -12,21 +12,31 @@ try{
     }
     let result=await axios(currency)
     let data=result.data.data.sort((a, b) =>b.changePercent24Hr - a.changePercent24Hr)
-    let arr=[]
-    await cryptoModel.deleteMany({})
+    // method-1
+    // let arr=[]
+    // await cryptoModel.deleteMany({})
+    // for(let i=0;i<data.length;i++){
+    //     // let unique=await cryptoModel.find({symbol:data[i].symbol,name:data[i].name})
+    //     // if(unique.length==0){
+    //         let collection={}
+    //         collection.symbol=data[i].symbol,
+    //         collection.name=data[i].name,
+    //         collection.marketCapUsd=data[i].marketCapUsd,
+    //         collection.priceUsd=data[i].priceUsd
+    //         arr.push(collection)
+    //     // }
+    // }
+    // await cryptoModel.insertMany(arr)
+    // method-2
     for(let i=0;i<data.length;i++){
-        // let unique=await cryptoModel.find({symbol:data[i].symbol,name:data[i].name})
-        // if(unique.length==0){
-            let collection={}
-            collection.symbol=data[i].symbol,
-            collection.name=data[i].name,
-            collection.marketCapUsd=data[i].marketCapUsd,
-            collection.priceUsd=data[i].priceUsd
-            arr.push(collection)
-        // }
+        let coin={
+            symbol:data[i].symbol,
+            name:data[i].name,
+            marketCapUsd:data[i].marketCapUsd,
+            priceUsd:data[i].priceUsd
+        };
+        await cryptoModel.findOneAndUpdate({symbol:data[i].symbol},data[i],{upsert:true,new:true})
     }
-    await cryptoModel.insertMany(arr)
-
     return res.status(200).send({status:true,message:data})
 }catch(error){
     return res.status(500).send({status:false,message:error.message})
